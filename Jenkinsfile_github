@@ -23,13 +23,13 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: P_NAMESPAC
        stage('Clone Git Project') {
             sh "pwd"
             echo 'Clone'
-            git branch: 'master', credentialsId: 'github_ci', url: 'https://github.com/shclub/edu12-3.git'
+            git branch: 'master', credentialsId: 'github_ci_edu7', url: 'https://github.com/KubeHatesMe/edu12-3.git'
             sh "ls"
         }
                      
       stage('Podman Build & Image Push ') {
               container('podman') {
-                  withCredentials([usernamePassword(credentialsId: 'github_ci',usernameVariable: 'USERNAME',passwordVariable: 'PASSWORD')]) {
+                  withCredentials([usernamePassword(credentialsId: 'github_ci_edu7',usernameVariable: 'USERNAME',passwordVariable: 'PASSWORD')]) {
                      sh  """
                      podman login -u ${USERNAME} -p ${PASSWORD} ${docker_registry} --tls-verify=false
                      podman build -t ${imageName}:${TAG} --cgroup-manager=cgroupfs --tls-verify=false .
@@ -43,14 +43,14 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: P_NAMESPAC
 
         stage('GitOps update') {
             container('podman') {
-               withCredentials([usernamePassword(credentialsId: 'github_ci',usernameVariable: 'USERNAME',passwordVariable: 'PASSWORD')]) {
+               withCredentials([usernamePassword(credentialsId: 'github_ci_edu7',usernameVariable: 'USERNAME',passwordVariable: 'PASSWORD')]) {
                     sh """  
                         cd ~
                         git clone https://${USERNAME}:${PASSWORD}@github.com/${USERNAME}/${git_ops_name}
                         cd ${git_ops_name}
                         git checkout HEAD
                         kustomize edit set image ${imageName}:${TAG}
-                        git config --global user.email "shclub@gmail.com"
+                        git config --global user.email "ukaris1004@gmail.com"
                         git config --global user.name ${USERNAME}
                         git add .
                         git commit -am 'update image tag  ${TAG} from My_Jenkins'
