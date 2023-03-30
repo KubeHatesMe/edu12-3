@@ -23,7 +23,7 @@ podTemplate(label: label, serviceAccount: 'jenkins-admin', namespace: P_NAMESPAC
        stage('Clone Git Project') {
             sh "pwd"
             echo 'Clone'
-            git branch: 'master', credentialsId: 'github_ci_edu7', url: 'https://github.com/KubeHatesMe/edu12-3.git'
+            git branch: 'master', credentialsId: 'github_ci_edu7', url: 'https://github.com/kubehatesme/edu12-3.git'
             sh "ls"
         }
                      
